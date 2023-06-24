@@ -17,3 +17,6 @@ alias cron-parser="java -jar cron-parser-1.0-SNAPSHOT.jar"
 ## Usage:
 
 cron-parser "*/15 0 1,15 * 1-5 /usr/bin/find"
+
+## Run tests
+./gradlew test

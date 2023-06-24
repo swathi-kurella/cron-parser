@@ -3,22 +3,13 @@ import java.util.List;
 
 public class CronParser {
 
-    private static final int MINUTE_END = 60;
-    private static final int HOUR_END = 24;
-    private static final int DAY_OF_MONTH_END = 31;
-    private static final int MONTH_END = 12;
-    private static final int DAY_OF_WEEK_END = 7;
-
-
-    private static final String RANGE = "-";
-    private static final String ANY = "*";
-    private static final String MOD = "/";
-    private static final String MULTIPLE = ",";
-
-    //*/15 0 1,15 * 1-5 /usr/bin/find
     public static void main(String[] args) {
-        String cronExpression = args[0];
-        String[] cronArgs = cronExpression.split(" ");
+        CronParser parser = new CronParser();
+        parser.evaluateExpression(args[0]);
+    }
+
+    private void evaluateExpression(String expression) {
+        String[] cronArgs = expression.split(Constants.SPACE);
         String minute = cronArgs[0];
         String hour = cronArgs[1];
         String dayOfMonth = cronArgs[2];
@@ -28,15 +19,15 @@ public class CronParser {
 
 
         //minute parser
-        List<Integer> minuteValues = parser(minute, MINUTE_END);
+        List<Integer> minuteValues = parser(minute, Constants.MINUTE_END);
         //hour parser
-        List<Integer> hourValues = parser(hour, HOUR_END);
+        List<Integer> hourValues = parser(hour, Constants.HOUR_END);
         //dayOfMonth parser
-        List<Integer> domValues = parser(dayOfMonth, DAY_OF_MONTH_END);
+        List<Integer> domValues = parser(dayOfMonth, Constants.DAY_OF_MONTH_END);
         //month parser
-        List<Integer> monthValues = parser(month, MONTH_END);
+        List<Integer> monthValues = parser(month, Constants.MONTH_END);
         //dayOfWeek parser
-        List<Integer> dowValues = parser(dayOfWeek, DAY_OF_WEEK_END);
+        List<Integer> dowValues = parser(dayOfWeek, Constants.DAY_OF_WEEK_END);
 
         System.out.println("minute " + toString(minuteValues));
         System.out.println("hour " + toString(hourValues));
@@ -46,23 +37,23 @@ public class CronParser {
         System.out.println("command " + command);
     }
 
-    private static List<Integer> parser(String expression, int maxValue) {
+    public List<Integer> parser(String expression, int maxValue) {
         List<Integer> result = new ArrayList<>();
-        String[] range = expression.split(RANGE);
+        String[] range = expression.split(Constants.RANGE);
         if (range.length > 1) {
             int rangeStart = Integer.parseInt(range[0]);
             int rangeEnd = Integer.parseInt(range[1]);
             return range(rangeStart, rangeEnd);
         }
-        String[] values = expression.split(MULTIPLE);
+        String[] values = expression.split(Constants.MULTIPLE);
         if (values.length > 1) {
             return multiple(values);
         }
-        if (expression.equals(ANY)) {
+        if (expression.equals(Constants.ANY)) {
             return range(1, maxValue);
         }
 
-        String[] mod = expression.split(MOD);
+        String[] mod = expression.split(Constants.MOD);
         if (mod.length > 1) {
             int denominator = Integer.parseInt(mod[1]);
             return mod(denominator, maxValue);
@@ -72,7 +63,7 @@ public class CronParser {
         return result;
     }
 
-    private static List<Integer> range(int start, int end) {
+    private List<Integer> range(int start, int end) {
         List<Integer> result = new ArrayList<>();
         for (int i = start; i <= end; i++) {
             result.add(i);
@@ -81,7 +72,7 @@ public class CronParser {
         return result;
     }
 
-    private static List<Integer> multiple(String[] values) {
+    private List<Integer> multiple(String[] values) {
         List<Integer> result = new ArrayList<>();
         for (String each : values) {
             int val = Integer.parseInt(each);
@@ -90,7 +81,7 @@ public class CronParser {
         return result;
     }
 
-    private static List<Integer> mod(int denominator, int maxValue) {
+    private List<Integer> mod(int denominator, int maxValue) {
         List<Integer> result = new ArrayList<>();
         int start = 0;
         while (start < maxValue) {
@@ -101,7 +92,7 @@ public class CronParser {
         return result;
     }
 
-    private static String toString(List<Integer> numbers) {
+    private String toString(List<Integer> numbers) {
         if (numbers == null)
             return "null";
 
