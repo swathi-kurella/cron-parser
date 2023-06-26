@@ -29,12 +29,12 @@ public class CronParser {
         //dayOfWeek parser
         List<Integer> dowValues = parser(dayOfWeek, Constants.DAY_OF_WEEK_END);
 
-        System.out.println("minute " + toString(minuteValues));
-        System.out.println("hour " + toString(hourValues));
-        System.out.println("day of month " + toString(domValues));
-        System.out.println("month " + toString(monthValues));
-        System.out.println("day of week " + toString(dowValues));
-        System.out.println("command " + command);
+        System.out.println(String.format("%-14s", "minute") + toString(minuteValues));
+        System.out.println(String.format("%-14s", "hour") + toString(hourValues));
+        System.out.println(String.format("%-14s", "day of month") + toString(domValues));
+        System.out.println(String.format("%-14s", "month") + toString(monthValues));
+        System.out.println(String.format("%-14s", "day of week") + toString(dowValues));
+        System.out.println(String.format("%-14s", "command") + command);
     }
 
     public List<Integer> parser(String expression, int maxValue) {
